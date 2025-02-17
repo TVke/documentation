@@ -2,7 +2,7 @@
 Envia.com Integration
 =====================
 
-Envia is a shipping service aggregator with presence in over 13 countries, specializing in Latin America. Once integrated, users can select shipping carriers on inventory operations in their Odoo database.
+Envia is a shipping service aggregator with presence in over 13 countries, specializing in Latin America, but also available for the US, Canada, India, Australia and some contries in Europe. Once integrated, users can select shipping carriers on inventory operations in their Odoo database.
 
 Setup in Envia
 ==================
