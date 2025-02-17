@@ -29,6 +29,10 @@ In your Envia.com, navigate to :menuselection:`Developers --> API Keys`, on the 
 
 This API key is the one we will request in Odoo, you can always come back for it.
 
+.. image:: envia_shipping/envia_token.png
+   :align: center
+   :alt: API Keys in Envia.com.
+
 Setup in Odoo
 ==================
 
