@@ -12,7 +12,7 @@ Create an account and activate carriers
 
 If you don’t have an account, we recommend heading to the `referral link <https://ship.envia.com/registro?partner_id=673>`_. This link provides personalized attention while also offering lower prices.
 
-.. image:: envia_shipping/Envia_registry_Process.png
+.. image:: envia_shipping/Envia_Registry_Process.png
    :align: center
    :alt: Registry process in website with Envia.com.
  
