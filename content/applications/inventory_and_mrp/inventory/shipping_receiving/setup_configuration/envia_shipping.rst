@@ -37,7 +37,7 @@ Install Envia.com shipping module
 
 Go to Odoo’s :guilabel:`Apps` module, search for the `Envia Shipping` integration, and install it.
 
-.. image:: sendcloud_shipping/envia_mod.png
+.. image:: envia_shipping/envia_mod.png
    :align: center
    :alt: Envia module to install in Odoo.
 
