@@ -80,7 +80,7 @@ Additional considerations for the :guilabel:`Envia Default Package`:
 
 Once previous fields are properly set, sync the carriers and a pop up will ask you to select one from the list and a service level: 
 
-.. image:: sendcloud_shipping/envia_popup.png
+.. image:: envia_shipping/envia_popup.png
    :align: center
    :alt: Envia.com carrier and services popup.
 
