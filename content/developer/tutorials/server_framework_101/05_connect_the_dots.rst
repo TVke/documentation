@@ -930,9 +930,9 @@ the system or context, such as the current date, time, or logged-in user.
 
 Fields can be assigned a default value by including the `default` argument in their declaration.
 This argument can be set to a static value or dynamically generated using a callable function, such
-as a model method or a lambda function. In both cases, the `self` argument provides access to the
-environment but does not represent the current record, as no record exists yet during the creation
-process.
+as a model method reference or a lambda function. In both cases, the `self` argument provides access
+to the environment but does not represent the current record, as no record exists yet during the
+creation process.
 
 .. example::
    In the following example, a default value is assigned to the `price` and `category_id` fields.
@@ -959,15 +959,24 @@ To make our real estate app more user-friendly, we can help with data entry by p
 fields with default values.
 
 .. exercise::
+   #. Set the default date of offers to today.
    #. Set the current user as the default salesperson for new properties.
    #. Set the default availability date of properties to two months from today.
    #. Assign a random default color to property tags.
 
    .. tip::
+      - Ensure you pass callable function references as default values, and not the result of
+        function calls, to avoid setting fixed defaults.
       - The current user can be accessed through the `user` environment property.
       - Color codes range from 1 to 11.
 
 .. spoiler:: Solution
+
+   .. code-block:: python
+      :caption: `real_estate_offer.py`
+      :emphasize-lines: 1
+
+      date = fields.Date(string="Date", required=True, default=fields.Date.today)
 
    .. code-block:: python
       :caption: `real_estate_property.py`
