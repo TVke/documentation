@@ -254,12 +254,12 @@ managing property types.
         --> Property Types` menu item.
       - Create a window action to browse property types only in list view.
       - Create the list view for property types.
-      - In a data file, describe at least as many default property types as the `type` field of the
-        `real.estate.property` model supports.
+      - In a data file, describe at least as many default property types as the :guilabel:`Type`
+        field of the `real.estate.property` model supports.
 
-   #. Replace the `type` field on the `real.estate.property` model by a many-to-one relationship to
-      the `real.estate.property.type` model. Prevent deleting property types if a property
-      references them.
+   #. Replace the :guilabel:`Type` field on the `real.estate.property` model by a many-to-one
+      relationship to the `real.estate.property.type` model. Prevent deleting property types if a
+      property references them.
 
    .. tip::
 
@@ -468,15 +468,17 @@ Two frequently used models in Odoo are:
 .. seealso::
    `The list of generic models in the base module <{GITHUB_PATH}/odoo/addons/base/models>`_
 
-To make our real estate properties more informative, let's add two pieces of information: the seller
-of the property and the salesperson managing the property.
+To make our real estate properties more informative, let's add three pieces of information: the
+seller of the property, the salesperson managing the property, and the address of the property.
 
 .. exercise::
    #. Add the following fields to the `real.estate.property` model:
 
-      - **Seller** (required): The person putting their property on sale; it can be any individual.
-      - **Salesperson**: The employee of the real estate agency overseeing the sale of the property.
-      - **Address** (required): The address of the property.
+      - :guilabel:`Seller` (required): The person putting their property on sale; it can be any
+        individual.
+      - :guilabel:`Salesperson`: The employee of the real estate agency overseeing the sale of the
+        property.
+      - :guilabel:`Address` (required): The address of the property.
 
    #. Modify the form view of properties to include a notebook component. The property description
       should be in the first page, and the three new fields should be in the second page.
@@ -658,17 +660,19 @@ to a list of offers received from potential buyers.
 .. exercise::
    #. Create a new `real.estate.offer` model. It should have the following fields:
 
-      - **Amount** (required): The amount offered to buy the property.
-      - **Buyer** (required): The person making the offer.
-      - **Date** (required; defaults to the creation date): When the offer was made.
-      - **Validity** (defaults to 7): The number of days before the offer expires.
-      - **State** (required): Either "Waiting", "Accepted", or "Refused".
+      - :guilabel:`Amount` (required): The amount offered to buy the property.
+      - :guilabel:`Buyer` (required): The person making the offer.
+      - :guilabel:`Date` (required; defaults to the creation date): When the offer was made.
+      - :guilabel:`Validity` (defaults to 7): The number of days before the offer expires.
+      - :guilabel:`State` (required): Either :guilabel:`Waiting`, :guilabel:`Accepted`, or
+        :guilabel:`Refused`.
 
    #. Create a list and form views for the `real.estate.offer` model. It's not necessary to create
       menu items or actions, as offers will be accessible from properties, but feel free to do it
       anyway!
    #. Allow connecting properties to multiple offers.
-   #. Modify the form view of properties to display offers in a new notebook page titled "Offers".
+   #. Modify the form view of properties to display offers in a new notebook page titled
+      :guilabel:`Offers`.
 
    .. tip::
       The `default` field argument expects a callable function, not a precalculated value. If you
@@ -854,10 +858,10 @@ with each property.
 .. exercise::
    #. Create a new `real.estate.tag` model. It should have the following fields:
 
-      - Name (required): The label of the tag.
-      - Color: The color code to use for the tag, as an integer.
+      - :guilabel:`Name` (required): The label of the tag.
+      - :guilabel:`Color`: The color code to use for the tag, as an integer.
 
-   #. In a data file, describe various default property tags. For example, "Renovated".
+   #. In a data file, describe various default property tags. For example, :guilabel:`Renovated`.
    #. Create all necessary UI components to manage tags from the :guilabel:`Configuration` category
       menu item.
    #. Allow connecting properties to multiple tags, and tags to multiple properties.
@@ -1009,7 +1013,7 @@ with each property.
               <field
                   name="tag_ids"
                   widget="many2many_tags"
-                  options="{'color_field': 'color', 'no_quick_create': True, 'no_create_edit': True}"
+                  options="{'color_field': 'color', 'no_quick_create': True, 'no_create': True}"
               />
           [...]
       </record>

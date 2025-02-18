@@ -98,13 +98,13 @@ Let's implement them.
 .. exercise::
    Add the following fields to the corresponding models and relevant views:
 
-   - **Total Area** (`real.estate.property`): The sum of the floor and garden areas.
-   - **Best Offer** (`real.estate.property`): The maximum amount of all offers.
-   - **Expiry Date** (`real.estate.offer`): The start date offset by the validity period.
+   - :guilabel:`Total Area` (`real.estate.property`): The sum of the floor and garden areas.
+   - :guilabel:`Best Offer` (`real.estate.property`): The maximum amount of all offers.
+   - :guilabel:`Expiry Date` (`real.estate.offer`): The start date offset by the validity period.
 
    .. tip::
-      - Use the :meth:`mapped <odoo.models.Model.mapped>` method to extract a recordset's field
-        values into a list.
+      - Use the :meth:`mapped <odoo.models.Model.mapped>` model method to extract a recordset's
+        field values into a list.
       - Import the `odoo.tools.date_utils` package to simplify operations on `Date` fields.
 
 .. spoiler:: Solution
@@ -251,7 +251,7 @@ Now that we have seen how inverse methods make computed fields editable, let's p
 practice.
 
 .. exercise::
-   Make the Expiry Date field editable on real estate offers.
+   Make the :guilabel:`Expiry Date` field editable on real estate offers.
 
    .. tip::
       You'll need to save the property form view to trigger the computation.
@@ -304,7 +304,7 @@ To make our real estate app more efficient and scalable, we can store certain co
 database. Let’s store one for now and see how it translates into the database schema.
 
 .. exercise::
-   #. Store the `total_area` field in the database.
+   #. Store the :guilabel:`Total Area` field in the database.
    #. Use `psql` to check that the field is stored in the database.
 
 .. spoiler:: Solution
@@ -370,8 +370,8 @@ fields to the property views. Let’s leverage search methods to achieve this.
 .. exercise::
    Add the following search filters to the real estate property views:
 
-   - **Stalled**: The property is past its availability date.
-   - **Priority**: The property has an offer that expires in less than two days.
+   - :guilabel:`Stalled`: The property is past its availability date.
+   - :guilabel:`Priority`: The property has an offer that expires in less than two days.
 
 .. spoiler:: Solution
 
@@ -501,8 +501,8 @@ simplify this process.
 
 .. exercise::
    #. Use a related field to display the phone number of buyers in the offer list view.
-   #. Use a related field to display the street of properties in form view and allow searching by
-      street without implementing a search method.
+   #. Use a related field to display the street of properties in form view. Allow editing the field
+      and searching by street without implementing a search method.
 
 .. spoiler:: Solution
 
@@ -533,7 +533,7 @@ simplify this process.
       :emphasize-lines: 2
 
       address_id = fields.Many2one(string="Address", comodel_name='res.partner', required=True)
-      street = fields.Char(string="Street", related='address_id.street', store=True)
+      street = fields.Char(string="Street", related='address_id.street', readonly=False, store=True)
 
    .. code-block:: xml
       :caption: `real_estate_property_views.xml`
@@ -651,9 +651,9 @@ In our real estate app, data entry could be more intuitive and efficient. Let's 
 to automate updates and guide users as they edit data.
 
 .. exercise::
-   #. Set the garden area to zero if the garden checkbox is unchecked.
-   #. Set the garden checkbox to checked if the garden area is set.
-   #. Display a non-blocking warning if the garden area is set to zero and the garden checkbox is
+   #. Set the garden area to zero if :guilabel:`Garden` is unchecked.
+   #. Set :guilabel:`Garden` to checked if the garden area is set.
+   #. Display a non-blocking warning if the garden area is set to zero and :guilabel:`Garden` is
       checked.
    #. Prevent archiving a property that has **pending** offers.
 
@@ -937,7 +937,7 @@ process.
 .. example::
    In the following example, a default value is assigned to the `price` and `category_id` fields.
 
-   .. code-block:: py
+   .. code-block:: python
 
       price = fields.Float(string="Sales Price", required=True, default=100)
       category_id = fields.Many2one(
@@ -945,12 +945,15 @@ process.
           comodel_name='product.category',
           ondelete='restrict',
           required=True,
-          default=lambda self: self.env.ref('product_tutorial.category_apparel'),
+          default=lambda self: self.env.ref('product.category_apparel'),
       )
 
    .. note::
       The `ref` environment method can be used to retrieve a record by its XML ID, similar to how
       it's done in data files.
+
+.. seealso::
+   Reference documentation for the :meth:`ref <odoo.api.Environment.ref>` method.
 
 To make our real estate app more user-friendly, we can help with data entry by pre-filling key
 fields with default values.
@@ -997,7 +1000,7 @@ fields with default values.
           name = fields.Char(string="Label", required=True)
           color = fields.Integer(string="Color", default=_default_color)
 
-.. _tutorials/server_framework_101/action_buttons:
+.. _tutorials/server_framework_101/business_workflows:
 
 Trigger business workflows
 ==========================
@@ -1015,10 +1018,143 @@ logic.
 CRUD methods
 ------------
 
-tmp
+CRUD :dfn:`Create, Read, Update, Delete` operations are the foundation of a model's business logic.
+They define how data is stored, retrieved, and modified.
 
-.. todo: def create of offer -> write state of the property to offer received
-.. todo: def unlink: _unlink_if_state_is_valid (new or cancelled)
+In Odoo, these operations are handled through predefined model methods, which can be overridden to
+implement additional business logic:
+
+- `create`: Called on a model class (`env['model_name']`) with a dictionary of field values (or a
+  list of dictionaries) as an argument. It returns the newly created record(s).
+- `write`: Called on an existing recordset with a dictionary of field values to update all records
+  in the set.
+- `unlink`: Called on a recordset to delete the records permanently.
+
+Unlike the other CRUD operations, reading data does not require a method call; record fields can be
+accessed directly using :code:`record.field`.
+
+.. example::
+   In the following example, a product is automatically archived if its category is inactive.
+
+   .. code-block:: python
+
+      class Product(models.Model):
+          _name = 'product'
+
+          active = fields.Boolean(default=True)
+
+          @api.model_create_multi
+          def create(self, vals_list):
+              for vals in vals_list:
+                  if category_id := vals.get('category_id'):  # A category is specified in the values.
+                      category = self.env['product.category'].browse(category_id).exists()
+                      if category and not category.active:  # The category exists and is archived.
+                          vals['active'] = False  # Create the product in the inactive state.
+              return super().create(vals_list)
+
+          def write(self, vals):
+              if new_category_id := vals.get('category_id'):  # The category of the product is updated.
+                  new_category = self.env['product.category'].browse(new_category_id).exists()
+                  if new_category and not new_category.active:  # The category exists and is archived.
+                      vals['active'] = False  # Archive the product.
+              return super().write(vals)
+
+      class ProductCategory(models.Model):
+          _name = 'product.category'
+
+          active = fields.Boolean(default=True)
+
+          def write(self, vals):
+              if self.active and vals.get('active') is False:  # The category is being archived.
+                  self.product_ids.active = False  # Archive all products of the category.
+              return super().write(vals)
+
+   .. note::
+      - Both the `create` and the `write` methods of `product` are overridden to ensure that the
+        behavior is enforced consistently. The `write` method override is necessary because it is
+        not called during record creation.
+      - The `create` method must support batch processing, which is why it is decorated with
+        :code:`api.model_create_multi` and processes a list of dictionaries (`vals_list`).
+      - The `browse` model method can be used to retrieve a record by its ID. Not to be confused
+        with the `ref` method.
+      - The `browse` method always returns a recordset, even if no record exists. Therefore,
+        chaining `exists` ensures that only existing records are considered before reading field
+        values.
+      - A field can be updated directly on a recordset with :code:`recordset.field = value`, which
+        is equivalent to calling :code:`recordset.write({'field': value})`.
+
+.. seealso::
+   - Reference documentation for the :meth:`@api.model_create_multi <odoo.api.model_create_multi>`
+     decorator.
+   - Reference documentation for the :meth:`create <odoo.models.Model.create>` method.
+   - Reference documentation for the :meth:`write <odoo.models.Model.write>` method.
+   - Reference documentation for the :meth:`unlink <odoo.models.Model.unlink>` method.
+   - Reference documentation for the :meth:`browse <odoo.models.Model.browse>` method.
+   - Reference documentation for the :meth:`exists <odoo.models.Model.exists>` method.
+
+.. exercise::
+   #. Move a property to the :guilabel:`Offer Received` state when its first offer is received.
+   #. Move a property back to the :guilabel:`New` state when all its offers are deleted.
+   #. Make the :guilabel:`Address` field optional and automatically assign an address when creating
+      a new property.
+   #. If no address is set, automatically assign one when the street is updated.
+
+.. spoiler:: Solution
+
+   .. code-block:: python
+      :caption: `real_estate_offer.py`
+      :emphasize-lines: 3-18
+
+      [...]
+
+      @api.model_create_multi
+      def create(self, vals_list):
+          offers = super().create(vals_list)
+          for offer in offers:
+              if offer.property_id.state == 'new':
+                  offer.property_id.state = 'offer_received'
+          return offers
+
+      def unlink(self):
+          for offer in self:
+              if (
+                  offer.property_id.state in ('offer_received', 'under_option')
+                  and len(offer.property_id.offer_ids) == 1  # The current offer is the last one.
+              ):
+                  offer.property_id.state = 'new'
+          return super().unlink()
+
+   .. code-block:: python
+      :caption: `real_estate_property.py`
+      :emphasize-lines: 1,5-27
+
+      address_id = fields.Many2one(string="Address", comodel_name='res.partner')
+
+      [...]
+
+      @api.model_create_multi
+      def create(self, vals_list):
+          for vals in vals_list:
+              if not vals.get('address_id'):  # No address is provided at creation time.
+                  # Create and assign a new one based on the property name.
+                  address = self.env['res.partner'].create({
+                      'name': vals.get('name'),
+                  })
+                  vals['address_id'] = address.id
+          return super().create(vals_list)
+
+      def write(self, vals):
+          res = super().write(vals)
+          if vals.get('street'):  # The street has been updated.
+              for property in self:
+                  if not property.address_id:  # The property has no address record.
+                      # Create and assign a new one based on the property name and the street.
+                      address = self.env['res.partner'].create({
+                          'name': property.name,
+                          'street': vals['street'],
+                      })
+                      property.address_id = address.id
+          return res
 
 .. _tutorials/server_framework_101/action_type_actions:
 

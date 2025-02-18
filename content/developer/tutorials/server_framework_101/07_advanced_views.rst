@@ -10,7 +10,10 @@ tmp
                       <field name="is_priority" widget="boolean_favorite" nolabel="1" readonly="False"/>   (/!\ requires to have product installed to have the correct font-size in form view)
 .. todo: add Gantt view of properties availability
 .. todo: add Kanban view of properties
-.. todo: wizards
+.. todo: wizards -> create a "receive offer wizard" to default the amount to the property's selling price
+.. todo: context active_test False on the category_id field of products to see archived categories
+.. todo: sequence widget on tags
+
 
 ----
 

@@ -131,20 +131,21 @@ create a model with some fields to represent real estate properties and their ch
    #. Define a new model with `real.estate.property` as `_name` and a short `_description`.
    #. Add fields to represent the following characteristics:
 
-      - **Name** (required)
-      - **Description**
-      - **Image** (max 600x400 pixels)
-      - **Active** (whether the property listing is active; defaults to true)
-      - **State** (new, offer received, under option, or sold; required; defaults to new)
-      - **Type** (house, apartment, office building, retail space, or warehouse; required; defaults to
-        house)
-      - **Selling Price** (without currency; with help text; required)
-      - **Availability Date**
-      - **Floor Area** (in square meters; with help text)
-      - **Number of Bedrooms** (defaults to two)
-      - **Garage** (whether there is a garage)
-      - **Garden** (whether there is a garden)
-      - **Garden Area** (in square meters; with help text)
+      - :guilabel:`Name` (required)
+      - :guilabel:`Description`
+      - :guilabel:`Image` (max 600x400 pixels)
+      - :guilabel:`Active` (whether the property listing is active; defaults to true)
+      - :guilabel:`State` (:guilabel:`New`, :guilabel:`Offer Received`, :guilabel:`Under Option`, or
+        :guilabel:`Sold`; required; defaults to :guilabel:`New`)
+      - :guilabel:`Type` (:guilabel:`House`, :guilabel:`Apartment`, :guilabel:`Office Building`,
+        :guilabel:`Retail Space`, or :guilabel:`Warehouse`; required; defaults to :guilabel:`House`)
+      - :guilabel:`Selling Price` (without currency; with help text; required)
+      - :guilabel:`Availability Date`
+      - :guilabel:`Floor Area` (in square meters; with help text)
+      - :guilabel:`Number of Bedrooms` (defaults to two)
+      - :guilabel:`Garage` (whether there is a garage)
+      - :guilabel:`Garden` (whether there is a garden)
+      - :guilabel:`Garden Area` (in square meters; with help text)
 
    .. tip::
       - The class name doesn't matter, but the convention is to use the model's upper-cased `_name`
