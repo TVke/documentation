@@ -565,6 +565,35 @@ The :guilabel:`GSTR-1` report is divided into sections. It displays the :guilabe
    .. image:: india/gst-gstr-1-sale-report.png
       :alt: GSTR-1 Report
 
+GSTR-1 Validations
+~~~~~~~~~~~~~~~~~~
+
+The system automatically validates invoices against predefined :guilabel:`GSTR-1` compliance rules.
+If an invoice does not meet these criteria, the system displays a warning message with the
+responsible lines.
+
+The following validations are enforced in the system:
+
+#. Inter-State Tax
+   - If the :guilabel:`Place of Supply` is outside the home state, but :guilabel:`CGST/SGST` taxes
+     are applied instead of :guilabel:`IGST`, the system flags the entry with a warning.
+
+#. Intra-State Tax
+   - If the :guilabel:`Place of Supply` is the home state, but :guilabel:`IGST` taxes are applied
+     instead of :guilabel:`CGST/SGST`, the system highlights the discrepancy.
+
+#. Missing HSN Code
+   - If an :guilabel:`HSN Code` is not set on the product, the system lists the invoice line with a
+     warning.
+
+#. Incorrect HSN Code for Services and Products
+   - If an :guilabel:`HSN Code` does not start with "99" for services (or if a product is assigned
+     an invalid :guilabel:`HSN Code` for services), the system marks the entry for correction.
+
+#. Invalid UQC Code
+   - If the :guilabel:`Unit Quantity Code (UQC)` does not comply with Indian GST standards, the
+     system flags the invoice for review.
+
 .. _india/gstr-3_report:
 
 GSTR-3 report
